@@ -1,4 +1,4 @@
-package org.fbi.aicqde.repository.dao;
+package org.fbi.aicqde.repository.dao.common;
 
 import org.apache.ibatis.annotations.Select;
 

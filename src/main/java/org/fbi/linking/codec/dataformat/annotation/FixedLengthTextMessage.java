@@ -14,6 +14,6 @@ import java.lang.annotation.RetentionPolicy;
 public @interface FixedLengthTextMessage {
     String name() default "";
     char padchar() default ' ';
-    String quote() default "";
+    String align() default "L";
     boolean mainClass() default false;
 }

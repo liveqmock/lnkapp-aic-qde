@@ -18,7 +18,9 @@
         </environment>
     </environments>
     <mappers>
-        <mapper resource="org/fbi/posprize/repository/dao/PrizeMapper.xml"/>
+        <mapper resource="org/fbi/aicqde/repository/mapper/common/AicqdeMapper.xml"/>
+        <mapper resource="org/fbi/aicqde/repository/mapper/AicQdeEntMapper.xml"/>
+        <mapper resource="org/fbi/aicqde/repository/mapper/AicQdeInvesterMapper.xml"/>
     </mappers>
 
 </configuration>

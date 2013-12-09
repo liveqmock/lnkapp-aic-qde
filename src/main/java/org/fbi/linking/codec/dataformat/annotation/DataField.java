@@ -26,7 +26,7 @@ public @interface DataField {
     int length() default 0;
 
     //定长格式时的对齐方式
-    String align() default "R";
+    String align() default "L";
 
     //定长格式时的补齐方式
     char padchar() default ' ';

@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 /**
  * 工商E线通测试 client
@@ -21,15 +24,20 @@ public class AicqdeClient {
         this.port = port;
     }
 
-    public byte[] call(byte[] sendbuf) {
-        Socket socket = null;
-        OutputStream os = null;
+    public byte[] call(byte[] sendbuf) throws Exception {
         byte[] recvbuf = null;
-        try {
-            socket = new Socket(ip, port);
-            socket.setSoTimeout(10000);
 
-            os = socket.getOutputStream();
+        InetAddress addr = InetAddress.getByName(ip);
+        Socket socket = new Socket();
+        try {
+            //socket = new Socket(ip, port);
+            socket.connect(new InetSocketAddress(addr, port), 10000);
+            //socket.setSendBufferSize(100);
+
+            socket.setSoTimeout(10000);
+            //BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+
+            OutputStream os = socket.getOutputStream();
             os.write(sendbuf);
             os.flush();
 
@@ -40,18 +48,14 @@ public class AicqdeClient {
                 throw new RuntimeException("报文长度错误...");
             }
             int msgLen = Integer.parseInt(new String(recvbuf).trim());
-            recvbuf = new byte[msgLen];
+            recvbuf = new byte[msgLen - 4];
 
             readNum = is.read(recvbuf);
             if (readNum != msgLen - 4) {
                 throw new RuntimeException("报文长度错误...");
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } finally {
             try {
-                assert os != null;
-                os.close();
                 socket.close();
             } catch (IOException e) {
                 //
@@ -74,7 +78,8 @@ public class AicqdeClient {
                 "44" +  //工商局编号	2	CHAR
                 "12345678901234567890123456789012"; //预登记号	32	CHAR	右补空格
 
-        String strLen = "" + (msg.getBytes("GBK").length + 4);
+        String strLen = null;
+        strLen = "" + (msg.getBytes("GBK").length + 4);
         String lpad = "";
         for (int i = 0; i < 4 - strLen.length(); i++) {
             lpad += "0";
@@ -82,7 +87,15 @@ public class AicqdeClient {
         strLen = lpad + strLen;
 
 
-        byte[] recvbuf = mock.call((strLen + msg).getBytes("GBK"));
+        byte[] recvbuf = new byte[0];
+        try {
+            recvbuf = mock.call((strLen + msg).getBytes("GBK"));
+        } catch (SocketTimeoutException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         System.out.printf("服务器返回：%s\n", new String(recvbuf, "GBK"));
     }
 }

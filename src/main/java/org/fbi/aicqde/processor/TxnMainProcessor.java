@@ -17,8 +17,6 @@ public abstract class TxnMainProcessor implements Processor, ProcessorConfig {
 
     @Override
 	public void service(ProcessorRequest request, ProcessorResponse response) {
-//		Map<String, Object> model = new HashMap<String, Object>();
 		execute((Stdp10ProcessorRequest)request, (Stdp10ProcessorResponse)response);
 	}
-
 }
