@@ -1,8 +1,8 @@
-package org.fbi.linking.codec.dataformat.samples.aicmodel.T2000;
+package org.fbi.linking.codec.dataformat.samples.staringmodel.T1000;
 
 
 import org.fbi.linking.codec.dataformat.annotation.DataField;
-import org.fbi.linking.codec.dataformat.annotation.OneToManyFixedLengthTextMessage;
+import org.fbi.linking.codec.dataformat.annotation.OneToManySeperatedTextMessage;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,13 +10,13 @@ import org.fbi.linking.codec.dataformat.annotation.OneToManyFixedLengthTextMessa
  * Date: 13-9-10
  * Time: ÏÂÎç5:44
  */
-@OneToManyFixedLengthTextMessage
-public class Item {
-    @DataField(seq = 1,length = 2)
-    private String itemNo;
+@OneToManySeperatedTextMessage(separator = ",")
+public class TIA1000Item {
+    @DataField(seq = 1)
+    private java.lang.String itemNo;
 
-    @DataField(seq = 2, length = 4)
-    private String itemName;
+    @DataField(seq = 2)
+    private java.lang.String itemName;
 
 
     public String getItemNo() {

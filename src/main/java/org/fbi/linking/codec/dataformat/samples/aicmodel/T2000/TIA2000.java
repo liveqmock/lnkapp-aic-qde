@@ -4,7 +4,6 @@ package org.fbi.linking.codec.dataformat.samples.aicmodel.T2000;
 import org.fbi.linking.codec.dataformat.annotation.DataField;
 import org.fbi.linking.codec.dataformat.annotation.FixedLengthTextMessage;
 import org.fbi.linking.codec.dataformat.annotation.OneToMany;
-import org.fbi.linking.codec.dataformat.samples.staringmodel.T1000.Item;
 
 import java.util.List;
 
@@ -25,8 +24,8 @@ public class TIA2000 {
     private String itemNum;
 
     @DataField(seq = 4, length = 6)
-    @OneToMany(mappedTo = "org.fbi.linking.codec.dataformat.samples.aicmodel.T2000.Item", totalNumberField = "itemNum")
-    private java.util.List<Item> items;
+    @OneToMany(mappedTo = "org.fbi.linking.codec.dataformat.samples.aicmodel.T2000.TIA2000Item", totalNumberField = "itemNum")
+    private java.util.List<TIA2000Item> items;
 
     public String getId() {
         return id;
@@ -52,11 +51,11 @@ public class TIA2000 {
         this.itemNum = itemNum;
     }
 
-    public List<Item> getItems() {
+    public List<TIA2000Item> getItems() {
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    public void setItems(List<TIA2000Item> items) {
         this.items = items;
     }
 }

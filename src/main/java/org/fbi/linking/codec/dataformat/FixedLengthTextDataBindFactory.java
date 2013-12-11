@@ -377,17 +377,20 @@ public class FixedLengthTextDataBindFactory extends DataBindAbstractFactory impl
             }
 
             if (oneToMany != null) {
-                String oneToManySeparator = null;
                 ArrayList list = (ArrayList) field.get(obj);
                 if (list != null) {
+                    Class<?> aClass = list.get(0).getClass();
+                    OneToManyFixedLengthTextMessage oneToManyTextMessage = aClass.getAnnotation(OneToManyFixedLengthTextMessage.class);
+                    if (oneToManyTextMessage == null) {
+                        throw new RuntimeException("OneToManyFixedLengthTextMessage not defined!");
+                    }
+                    //TODO 使用OneToManyFixedLengthTextMessage中的align等定义进行处理
+
+                    //初始化OneToMany Fields定义
+                    initOneToManyAnnotatedFields(aClass);
+
                     for (Object target : list) {
                         StringBuilder oneToManyResultBuffer = new StringBuilder();
-                        if (oneToManySeparator == null) {
-                            OneToManyFixedLengthTextMessage oneToManyTextMessage = target.getClass().getAnnotation(OneToManyFixedLengthTextMessage.class);
-                            if (oneToManyTextMessage == null) {
-                                throw new RuntimeException("OneToManyFixedLengthTextMessage not defined!");
-                            }
-                        }
 
                         Map<Integer, String> oneToManyResultsMap = new HashMap<Integer, String>();
                         generateOneToManyMessagePositionMap(target.getClass(), target, oneToManyResultsMap);

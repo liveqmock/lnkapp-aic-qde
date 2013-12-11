@@ -29,8 +29,8 @@ public class TIA1000 {
     private java.lang.String itemNum;
 
     @DataField(seq = 6)
-    @OneToMany(mappedTo = "org.fbi.linking.codec.dataformat.samples.staringmodel.T1000.Item", totalNumberField = "itemNum")
-    private java.util.List<Item> items;
+    @OneToMany(mappedTo = "org.fbi.linking.codec.dataformat.samples.staringmodel.T1000.TIA1000Item", totalNumberField = "itemNum")
+    private java.util.List<TIA1000Item> items;
 
     public String getId() {
         return id;
@@ -56,11 +56,11 @@ public class TIA1000 {
         this.itemNum = itemNum;
     }
 
-    public List<Item> getItems() {
+    public List<TIA1000Item> getItems() {
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    public void setItems(List<TIA1000Item> items) {
         this.items = items;
     }
 
