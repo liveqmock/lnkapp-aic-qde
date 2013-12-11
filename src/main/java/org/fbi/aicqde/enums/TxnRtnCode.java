@@ -12,8 +12,10 @@ public enum TxnRtnCode implements EnumApp {
 
     TXN_EXECUTE_FAILED("1100", "交易失败"),
 
-    MSG_AUTHENTICATE_ILLEGAL("2000", "报文验证失败"),
-    MSG_PARSE_FAILED("2001", "报文解析错误"),
+    CBSMSG_AUTHENTICATE_ILLEGAL("2000", "特色业务平台报文验证失败"),
+    CBSMSG_UNMARSHAL_FAILED("2001", "特色业务平台报文解析错误"),
+    TPSMSG_MARSHAL_FAILED("2002", "第三方报文生成错误"),
+    TPSMSG_UNMARSHAL_FAILED("2003", "第三方报文解析错误"),
 
     MSG_AMT_ERROR("4001", "金额错误"),
     TXN_REFUND_NOT_ALLOWED("4010", "系统已对账，不能取消缴款。"),

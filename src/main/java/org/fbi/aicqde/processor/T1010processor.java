@@ -4,16 +4,18 @@ package org.fbi.aicqde.processor;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.fbi.aicqde.domain.aicqde.T1070Request.AICTIA1070;
-import org.fbi.aicqde.domain.aicqde.T1070Response.AICTOA1070;
-import org.fbi.aicqde.domain.starring.T1070Request.TIA1070;
-import org.fbi.aicqde.domain.starring.T1070Response.TOA1070;
+import org.fbi.aicqde.domain.aicqde.T1010Request.AICTIA1010;
+import org.fbi.aicqde.domain.aicqde.T1010Request.AICTIA1010Item;
+import org.fbi.aicqde.domain.aicqde.T1010Response.AICTOA1010;
+import org.fbi.aicqde.domain.starring.T1010Request.TIA1010;
+import org.fbi.aicqde.domain.starring.T1010Request.TIA1010Item;
+import org.fbi.aicqde.domain.starring.T1010Response.TOA1010;
 import org.fbi.aicqde.enums.TxnRtnCode;
 import org.fbi.aicqde.helper.AicqdeClient;
 import org.fbi.aicqde.helper.MybatisFactory;
 import org.fbi.aicqde.helper.ProjectConfigManager;
-import org.fbi.aicqde.repository.dao.AicQdeEntMapper;
-import org.fbi.aicqde.repository.model.AicQdeEnt;
+import org.fbi.aicqde.repository.dao.AicQdeInvesterMapper;
+import org.fbi.aicqde.repository.model.AicQdeInvester;
 import org.fbi.linking.codec.dataformat.FixedLengthTextDataFormat;
 import org.fbi.linking.codec.dataformat.SeperatedTextDataFormat;
 import org.fbi.linking.processor.ProcessorException;
@@ -24,21 +26,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * 1561070入资登记预交易
+ * 1561010入资登记
  */
-public class T1070processor extends Stdp10Processor {
+public class T1010processor extends Stdp10Processor {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public void service(Stdp10ProcessorRequest request, Stdp10ProcessorResponse response) throws ProcessorException, IOException {
-        TIA1070 tia;
+        String txnDate = request.getHeader("txnTime").substring(0,8);
+        TIA1010 tia;
 
         try {
             tia = getStarringTia(request.getRequestBody());
@@ -49,11 +53,13 @@ public class T1070processor extends Stdp10Processor {
         }
 
         //工商局通讯处理 -
-        AICTIA1070 aictia1070 = assembleAictia1070(tia);
-        AICTOA1070 aictoa1070 = null;
+        AICTIA1010 aictia1010 = assembleAictia1010(tia, request);
+        aictia1010.setTxnCode("1010");
+        AICTOA1010 aictoa1010 = null;
+
         String sendMsgForAic = null;
         try {
-            sendMsgForAic = getSendMsgForAic(aictia1070);
+            sendMsgForAic = getSendMsgForAic(aictia1010);
         } catch (Exception e) {
             logger.error("生成工商请求报文时出错.", e);
             response.setHeader("rtnCode", TxnRtnCode.TPSMSG_MARSHAL_FAILED.getCode());
@@ -61,7 +67,7 @@ public class T1070processor extends Stdp10Processor {
         }
 
         try {
-            aictoa1070 = sendAndRecvForAic(sendMsgForAic);
+            aictoa1010 = sendAndRecvForAic(sendMsgForAic);
         } catch (SocketTimeoutException e) {
             logger.error("与工商服务器通讯处理超时.", e);
             response.setHeader("rtnCode", TxnRtnCode.MSG_RECV_TIMEOUT.getCode());
@@ -73,15 +79,11 @@ public class T1070processor extends Stdp10Processor {
         }
 
         //处理工商局返回报文--
-        if (!"00".equals(aictoa1070.getRntCode())) {
+        if (!"00".equals(aictoa1010.getRntCode())) {
             //TODO
         }
-        TOA1070 toa = new TOA1070();
-        toa.setActNo(aictoa1070.getActNo());
-        toa.setEntName(aictoa1070.getEntName());
-        toa.setBankName(aictoa1070.getBankName());
-
-        processTxn(aictia1070, aictoa1070);
+        TOA1010 toa = new TOA1010();
+        processTxn(aictia1010, aictoa1010, txnDate);
 
 
         //组特色平台响应报文--
@@ -98,31 +100,48 @@ public class T1070processor extends Stdp10Processor {
     }
 
     //处理Starring请求报文
-    private TIA1070 getStarringTia(byte[] body) throws Exception {
-        TIA1070 tia = new TIA1070();
+    private TIA1010 getStarringTia(byte[] body) throws Exception {
+        TIA1010 tia = new TIA1010();
         SeperatedTextDataFormat starringDataFormat = new SeperatedTextDataFormat(tia.getClass().getPackage().getName());
-        tia = (TIA1070) starringDataFormat.fromMessage(new String(body, "GBK"), "TIA1070");
+        tia = (TIA1010) starringDataFormat.fromMessage(new String(body, "GBK"), "TIA1010");
         return tia;
     }
 
     //生成工商请求报文对应BEAN
-    private AICTIA1070 assembleAictia1070(TIA1070 tia) {
-        AICTIA1070 aictia1070 = new AICTIA1070();
-        aictia1070.setTxnCode("1070");
-        aictia1070.setBankCode(tia.getBankCode());
-        aictia1070.setTellerId("7777777");
-        aictia1070.setBranchId("55555");
-        aictia1070.setAreaCode(tia.getAreaCode());
-        aictia1070.setAicCode(tia.getAicCode());
-        aictia1070.setPregNo(tia.getPregNo());
-        return aictia1070;
+    private AICTIA1010 assembleAictia1010(TIA1010 tia, Stdp10ProcessorRequest request) {
+        AICTIA1010 aictia1010 = new AICTIA1010();
+
+/*
+        try {
+            BeanUtils.copyProperties(aictia1010, tia);
+        } catch (Exception e) {
+            throw new RuntimeException("Bean copy error!");
+        }
+*/
+        aictia1010.setTxnCode(request.getHeader("txnCode"));
+        aictia1010.setTellerId(request.getHeader("tellerId"));
+        aictia1010.setBranchId(request.getHeader("branchId"));
+        aictia1010.setBankHostSn(request.getHeader("serialNo"));
+
+        List<AICTIA1010Item> aictia1010Items = new ArrayList<>();
+        try {
+            for (TIA1010Item item : tia.getItems()) {
+                AICTIA1010Item aictia1010Item = new AICTIA1010Item();
+                BeanUtils.copyProperties(aictia1010Item, item);
+                aictia1010Items.add(aictia1010Item);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Bean copy error!");
+        }
+        aictia1010.setItems(aictia1010Items);
+        return aictia1010;
     }
 
     //生成工商请求报文
-    private String getSendMsgForAic(AICTIA1070 aictia1070) throws Exception {
+    private String getSendMsgForAic(AICTIA1010 aictia1010) throws Exception {
         Map<String, Object> modelObjectsMap = new HashMap<String, Object>();
-        modelObjectsMap.put(aictia1070.getClass().getName(), aictia1070);
-        FixedLengthTextDataFormat aicReqDataFormat = new FixedLengthTextDataFormat(aictia1070.getClass().getPackage().getName());
+        modelObjectsMap.put(aictia1010.getClass().getName(), aictia1010);
+        FixedLengthTextDataFormat aicReqDataFormat = new FixedLengthTextDataFormat(aictia1010.getClass().getPackage().getName());
 
         String sendMsg = (String) aicReqDataFormat.toMessage(modelObjectsMap);
         String strLen = "" + (sendMsg.getBytes("GBK").length + 4);
@@ -137,7 +156,7 @@ public class T1070processor extends Stdp10Processor {
     }
 
     //工商服务器通讯
-    private AICTOA1070 sendAndRecvForAic(String sendMsg) throws Exception {
+    private AICTOA1010 sendAndRecvForAic(String sendMsg) throws Exception {
         String servIp = ProjectConfigManager.getInstance().getProperty("aic.server.ip");
         int servPort = Integer.parseInt(ProjectConfigManager.getInstance().getProperty("aic.server.port"));
 
@@ -147,14 +166,14 @@ public class T1070processor extends Stdp10Processor {
         String recvMsg = new String(recvbuf, "GBK");
         logger.info("工商返回：" + recvMsg);
 
-        AICTOA1070 aictoa1070 = new AICTOA1070();
-        FixedLengthTextDataFormat aicRespDataFormat = new FixedLengthTextDataFormat(aictoa1070.getClass().getPackage().getName());
-        aictoa1070 = (AICTOA1070) aicRespDataFormat.fromMessage(recvMsg.getBytes("GBK"), "AICTOA1070");
-        return aictoa1070;
+        AICTOA1010 aictoa1010 = new AICTOA1010();
+        FixedLengthTextDataFormat aicRespDataFormat = new FixedLengthTextDataFormat(aictoa1010.getClass().getPackage().getName());
+        aictoa1010 = (AICTOA1010) aicRespDataFormat.fromMessage(recvMsg.getBytes("GBK"), "AICTOA1010");
+        return aictoa1010;
     }
 
     //处理工商返回报文
-    private String getRespMsgForStarring(TOA1070 toa) throws Exception {
+    private String getRespMsgForStarring(TOA1010 toa) throws Exception {
         String starringRespMsg;
         Map<String, Object> modelObjectsMap = new HashMap<String, Object>();
         modelObjectsMap.put(toa.getClass().getName(), toa);
@@ -164,24 +183,30 @@ public class T1070processor extends Stdp10Processor {
     }
 
     //业务逻辑处理
-    private void processTxn(AICTIA1070 tia, AICTOA1070 toa) {
+    private void processTxn(AICTIA1010 tia, AICTOA1010 toa, String txnDate) {
         SqlSessionFactory sqlSessionFactory = MybatisFactory.ORACLE.getInstance();
         try (SqlSession session = sqlSessionFactory.openSession()) {
-            AicQdeEnt record = new AicQdeEnt();
-            BeanUtils.copyProperties(record, toa);
-            record.setPregNo(tia.getPregNo());
-            record.setAreaCode(tia.getAreaCode());
-            record.setAicCode(tia.getAicCode());
-            record.setAicName("工商局名称");
-            record.setTellerId(tia.getTellerId());
-            record.setBranchId(tia.getBranchId());
-            record.setActBal(new BigDecimal("0.00"));
-
-            AicQdeEntMapper mapper = session.getMapper(AicQdeEntMapper.class);
-            mapper.insert(record);
+            AicQdeInvesterMapper mapper = session.getMapper(AicQdeInvesterMapper.class);
+            int i = 0;
+            for (AICTIA1010Item item : tia.getItems()) {
+                String vchSn = toa.getVchNos().substring(0 + i * 3, 3 + i * 3);
+                AicQdeInvester record = new AicQdeInvester();
+                record.setRegNo(toa.getPregNo()); //TODO 预注册号？
+                record.setVchSn(vchSn);
+                record.setInvesterName(item.getInvesterName());
+                record.setActNo(item.getActNo());
+                record.setInvAmt(new BigDecimal(item.getInvAmt()));
+                record.setActBankName(item.getActBankName());
+                record.setCertId(item.getCertId());
+                record.setInvDate(txnDate);
+                record.setInvestType("1");
+                record.setBankHostSn(toa.getBankHostSn());
+                i++;
+                mapper.insert(record);
+            }
             session.commit();
-        } catch (InvocationTargetException | IllegalAccessException e) {
-            throw new RuntimeException("报文 bean copy 出错。", e);
+        } catch (Exception e) {
+            throw new RuntimeException("业务逻辑处理出错。", e);
         }
     }
 

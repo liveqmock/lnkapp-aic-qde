@@ -3,6 +3,8 @@ package org.fbi.aicqde.internal;
 import org.fbi.linking.processor.ProcessorManagerService;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,6 +12,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 public class AppActivator implements BundleActivator {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static BundleContext context;
 
@@ -22,23 +25,15 @@ public class AppActivator implements BundleActivator {
 
         ProcessorFactory factory = new ProcessorFactory();
         Dictionary<String, Object> properties = new Hashtable<String, Object>();
-        //properties.put(Constants.SERVICE_RANKING, 1);
-
-
-        //properties.put(Constants.SERVICE_PID, ProcessorManagerService.class.getName());
         properties.put("APPID", "AIC-QDE");
-
         context.registerService(ProcessorManagerService.class.getName(), factory, properties);
 
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                + " - Starting the AIC-QDE app bundle...." );
+        logger.info(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + " - Starting the AIC-QDE app bundle...." );
     }
 
     public void stop(BundleContext context) throws Exception {
         AppActivator.context = null;
-
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                + " - Stopping the AIC-QDE app bundle...");
+        logger.info(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + " - Stopping the AIC-QDE app bundle...");
     }
 
 }
