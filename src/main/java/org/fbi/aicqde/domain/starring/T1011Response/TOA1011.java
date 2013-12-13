@@ -1,12 +1,12 @@
-package org.fbi.aicqde.domain.starring.T1010Response;
+package org.fbi.aicqde.domain.starring.T1011Response;
 
 import org.fbi.linking.codec.dataformat.annotation.DataField;
 import org.fbi.linking.codec.dataformat.annotation.SeperatedTextMessage;
 
 @SeperatedTextMessage(separator = "\\|",  mainClass = true)
-public class TOA1010 {
+public class TOA1011 {
     @DataField(seq = 1)
-    private String pregNo; //预登记号
+    private String regNo; //预登记号
     @DataField(seq = 2)
     private String vchSn1; //入资凭证序号
     @DataField(seq = 3)
@@ -18,12 +18,12 @@ public class TOA1010 {
     @DataField(seq = 6)
     private String vchSn5; //入资凭证序号
 
-    public String getPregNo() {
-        return pregNo;
+    public String getRegNo() {
+        return regNo;
     }
 
-    public void setPregNo(String pregNo) {
-        this.pregNo = pregNo;
+    public void setRegNo(String regNo) {
+        this.regNo = regNo;
     }
 
     public String getVchSn1() {
@@ -69,7 +69,7 @@ public class TOA1010 {
     @Override
     public String toString() {
         return "TOA1011{" +
-                "regNo='" + pregNo + '\'' +
+                "regNo='" + regNo + '\'' +
                 ", vchSn1='" + vchSn1 + '\'' +
                 ", vchSn2='" + vchSn2 + '\'' +
                 ", vchSn3='" + vchSn3 + '\'' +

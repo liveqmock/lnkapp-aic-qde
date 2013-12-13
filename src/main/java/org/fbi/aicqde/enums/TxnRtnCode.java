@@ -3,31 +3,25 @@ package org.fbi.aicqde.enums;
 import java.util.Hashtable;
 
 /**
- * 业务交易返回码
+ * ҵ���׷�����
  */
 public enum TxnRtnCode implements EnumApp {
 
-    TXN_EXECUTE_SECCESS("0000", "交易完成"),
-    TXN_PAY_REPEATED("0001", "该票据已缴款"),  //与交易完成相同，便于特色平台进行重复缴款
+    TXN_EXECUTE_SECCESS("0000", "�������"),
+    TXN_PAY_REPEATED("0001", "��Ʊ���ѽɿ�"),  //�뽻�������ͬ��������ɫƽ̨�����ظ��ɿ�
 
-    TXN_EXECUTE_FAILED("1100", "交易失败"),
+    TXN_EXECUTE_FAILED("1100", "����ʧ��"),
 
-    CBSMSG_AUTHENTICATE_ILLEGAL("2000", "特色业务平台报文验证失败"),
-    CBSMSG_UNMARSHAL_FAILED("2001", "特色业务平台报文解析错误"),
-    TPSMSG_MARSHAL_FAILED("2002", "第三方报文生成错误"),
-    TPSMSG_UNMARSHAL_FAILED("2003", "第三方报文解析错误"),
+    CBSMSG_AUTHENTICATE_ILLEGAL("2000", "��ɫҵ��ƽ̨������֤ʧ��"),
+    CBSMSG_UNMARSHAL_FAILED("2001", "��ɫҵ��ƽ̨���Ľ�������"),
+    TPSMSG_MARSHAL_FAILED("2002", "�������������ɴ���"),
+    TPSMSG_UNMARSHAL_FAILED("2003", "���������Ľ�������"),
 
-    MSG_AMT_ERROR("4001", "金额错误"),
-    TXN_REFUND_NOT_ALLOWED("4010", "系统已对账，不能取消缴款。"),
-    TXN_CHKFILE_NOT_UPLOADED("4020", "对账文件上传失败。"),
-    TXN_BMK_NOT_EXIST("4030", "未上传该笔不明款交易。"),
-    TXN_RECHKACT_NOT_ALLOWED("4040", "不能重复对账。"),
-    TXN_CHKACT_NOT_SUC("4050", "企业对账不平。"),
+    MSG_RECV_TIMEOUT("3000", "ͨ�ų�ʱ"),
+    MSG_COMM_ERROR("3001", "ͨ���쳣"),
 
-    MSG_RECV_TIMEOUT("3000", "通信超时"),
-    MSG_COMM_ERROR("3001", "通信异常"),
-
-    UNKNOWN_EXCEPTION("9000", "其他未知异常");
+    MSG_AMT_ERROR("4001", "������"),
+    UNKNOWN_EXCEPTION("9000", "����δ֪�쳣");
 
     private String code = null;
     private String title = null;
