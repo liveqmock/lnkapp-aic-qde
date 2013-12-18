@@ -42,7 +42,7 @@ public class T1070processor extends Stdp10Processor {
         }
 
         //工商局通讯处理 -
-        AICTIA1070 aictia1070 = assembleAictia1070(tia);
+        AICTIA1070 aictia1070 = assembleAictia1070(tia, request);
         AICTOA1070 aictoa1070 = null;
         String sendMsgForAic = null;
         try {
@@ -99,12 +99,12 @@ public class T1070processor extends Stdp10Processor {
     }
 
     //生成工商请求报文对应BEAN
-    private AICTIA1070 assembleAictia1070(TIA1070 tia) {
+    private AICTIA1070 assembleAictia1070(TIA1070 tia, Stdp10ProcessorRequest request) {
         AICTIA1070 aictia1070 = new AICTIA1070();
         aictia1070.setTxnCode("1070");
         aictia1070.setBankCode(tia.getBankCode());
-        aictia1070.setTellerId("7777777");
-        aictia1070.setBranchId("55555");
+        aictia1070.setTellerId(request.getHeader("tellerId"));
+        aictia1070.setBranchId(request.getHeader("branchId"));
         aictia1070.setAreaCode(tia.getAreaCode());
         aictia1070.setAicCode(tia.getAicCode());
         aictia1070.setPregNo(tia.getPregNo());

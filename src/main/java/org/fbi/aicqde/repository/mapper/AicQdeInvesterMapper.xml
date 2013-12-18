@@ -9,7 +9,7 @@
     -->
     <result column="PKID" jdbcType="VARCHAR" property="pkid" />
     <result column="PREG_NO" jdbcType="VARCHAR" property="pregNo" />
-    <result column="REG_NO" jdbcType="VARCHAR" property="regNo" />
+    <result column="REG_NO" jdbcType="VARCHAR" property="pregNo" />
     <result column="VCH_SN" jdbcType="VARCHAR" property="vchSn" />
     <result column="INVESTER_NAME" jdbcType="VARCHAR" property="investerName" />
     <result column="ACT_NO" jdbcType="VARCHAR" property="actNo" />
@@ -141,7 +141,7 @@
       INV_AMT, INV_DATE, ACT_BANK_NAME, 
       CERT_ID, INVEST_TYPE, BANK_HOST_SN
       )
-    values (#{pkid,jdbcType=VARCHAR}, #{pregNo,jdbcType=VARCHAR}, #{regNo,jdbcType=VARCHAR}, 
+    values (#{pkid,jdbcType=VARCHAR}, #{pregNo,jdbcType=VARCHAR}, #{pregNo,jdbcType=VARCHAR},
       #{vchSn,jdbcType=VARCHAR}, #{investerName,jdbcType=VARCHAR}, #{actNo,jdbcType=VARCHAR}, 
       #{invAmt,jdbcType=DECIMAL}, #{invDate,jdbcType=VARCHAR}, #{actBankName,jdbcType=VARCHAR}, 
       #{certId,jdbcType=VARCHAR}, #{investType,jdbcType=VARCHAR}, #{bankHostSn,jdbcType=VARCHAR}
@@ -162,7 +162,7 @@
       <if test="pregNo != null">
         PREG_NO,
       </if>
-      <if test="regNo != null">
+      <if test="pregNo != null">
         REG_NO,
       </if>
       <if test="vchSn != null">
@@ -198,8 +198,8 @@
       <if test="pregNo != null">
         #{pregNo,jdbcType=VARCHAR},
       </if>
-      <if test="regNo != null">
-        #{regNo,jdbcType=VARCHAR},
+      <if test="pregNo != null">
+        #{pregNo,jdbcType=VARCHAR},
       </if>
       <if test="vchSn != null">
         #{vchSn,jdbcType=VARCHAR},
@@ -255,8 +255,8 @@
       <if test="record.pregNo != null">
         PREG_NO = #{record.pregNo,jdbcType=VARCHAR},
       </if>
-      <if test="record.regNo != null">
-        REG_NO = #{record.regNo,jdbcType=VARCHAR},
+      <if test="record.pregNo != null">
+        REG_NO = #{record.pregNo,jdbcType=VARCHAR},
       </if>
       <if test="record.vchSn != null">
         VCH_SN = #{record.vchSn,jdbcType=VARCHAR},
@@ -299,7 +299,7 @@
     update AIC_QDE_INVESTER
     set PKID = #{record.pkid,jdbcType=VARCHAR},
       PREG_NO = #{record.pregNo,jdbcType=VARCHAR},
-      REG_NO = #{record.regNo,jdbcType=VARCHAR},
+      REG_NO = #{record.pregNo,jdbcType=VARCHAR},
       VCH_SN = #{record.vchSn,jdbcType=VARCHAR},
       INVESTER_NAME = #{record.investerName,jdbcType=VARCHAR},
       ACT_NO = #{record.actNo,jdbcType=VARCHAR},

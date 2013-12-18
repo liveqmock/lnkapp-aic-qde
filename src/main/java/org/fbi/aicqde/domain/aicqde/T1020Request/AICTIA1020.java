@@ -1,4 +1,4 @@
-package org.fbi.aicqde.domain.aicqde.T1070Request;
+package org.fbi.aicqde.domain.aicqde.T1020Request;
 
 
 import org.fbi.linking.codec.dataformat.annotation.DataField;
@@ -9,7 +9,7 @@ import org.fbi.linking.codec.dataformat.annotation.FixedLengthTextMessage;
  * Date: 13-11-22
  */
 @FixedLengthTextMessage(mainClass = true)
-public class AICTIA1070 {
+public class AICTIA1020 {
     @DataField(seq = 1, length = 4)
     private String txnCode;    //交易代码
 
@@ -30,6 +30,19 @@ public class AICTIA1070 {
 
     @DataField(seq = 7, length = 4)
     private String pregNo; //预登记号
+
+    @DataField(seq = 8, length = 50)
+    private String bankName; //开户行名称
+
+    @DataField(seq = 9, length = 32)
+    private String transinActno; //划转入帐帐号
+
+    @DataField(seq = 8, length = 8)
+    private String transDate; //划转日期
+
+    @DataField(seq = 9, length = 1)
+    private String transBankFlag; //划转行标志	1-划转本行；2-划转他行
+
 
     public String getTxnCode() {
         return txnCode;
@@ -85,5 +98,54 @@ public class AICTIA1070 {
 
     public void setPregNo(String pregNo) {
         this.pregNo = pregNo;
+    }
+
+    public String getTransinActno() {
+        return transinActno;
+    }
+
+    public void setTransinActno(String transinActno) {
+        this.transinActno = transinActno;
+    }
+
+    public String getTransDate() {
+        return transDate;
+    }
+
+    public void setTransDate(String transDate) {
+        this.transDate = transDate;
+    }
+
+    public String getTransBankFlag() {
+        return transBankFlag;
+    }
+
+    public void setTransBankFlag(String transBankFlag) {
+        this.transBankFlag = transBankFlag;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    @Override
+    public String toString() {
+        return "AICTIA1020{" +
+                "txnCode='" + txnCode + '\'' +
+                ", bankCode='" + bankCode + '\'' +
+                ", tellerId='" + tellerId + '\'' +
+                ", branchId='" + branchId + '\'' +
+                ", areaCode='" + areaCode + '\'' +
+                ", aicCode='" + aicCode + '\'' +
+                ", pregNo='" + pregNo + '\'' +
+                ", bankName='" + bankName + '\'' +
+                ", transinActno='" + transinActno + '\'' +
+                ", transDate='" + transDate + '\'' +
+                ", transBankFlag='" + transBankFlag + '\'' +
+                '}';
     }
 }

@@ -85,7 +85,7 @@ public class T1010processor extends Stdp10Processor {
             return;
         }
         TOA1010 toa = new TOA1010();
-        processTxn(aictia1010, aictoa1010, tia, request);
+        //processTxn(aictia1010, aictoa1010, tia, request);
 
 
         //组特色平台响应报文--

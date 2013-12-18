@@ -11,7 +11,7 @@
     <result column="AREA_CODE" jdbcType="VARCHAR" property="areaCode" />
     <result column="AIC_CODE" jdbcType="VARCHAR" property="aicCode" />
     <result column="AIC_NAME" jdbcType="VARCHAR" property="aicName" />
-    <result column="REG_NO" jdbcType="VARCHAR" property="regNo" />
+    <result column="REG_NO" jdbcType="VARCHAR" property="pregNo" />
     <result column="ACT_NO" jdbcType="VARCHAR" property="actNo" />
     <result column="ACT_BAL" jdbcType="DECIMAL" property="actBal" />
     <result column="BANK_HOST_SN" jdbcType="VARCHAR" property="bankHostSn" />
@@ -159,7 +159,7 @@
       ENT_NAME, TELLER_ID, BRANCH_ID
       )
     values (#{pregNo,jdbcType=VARCHAR}, #{areaCode,jdbcType=VARCHAR}, #{aicCode,jdbcType=VARCHAR}, 
-      #{aicName,jdbcType=VARCHAR}, #{regNo,jdbcType=VARCHAR}, #{actNo,jdbcType=VARCHAR}, 
+      #{aicName,jdbcType=VARCHAR}, #{pregNo,jdbcType=VARCHAR}, #{actNo,jdbcType=VARCHAR},
       #{actBal,jdbcType=DECIMAL}, #{bankHostSn,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, 
       #{entName,jdbcType=VARCHAR}, #{tellerId,jdbcType=VARCHAR}, #{branchId,jdbcType=VARCHAR}
       )
@@ -184,7 +184,7 @@
       <if test="aicName != null">
         AIC_NAME,
       </if>
-      <if test="regNo != null">
+      <if test="pregNo != null">
         REG_NO,
       </if>
       <if test="actNo != null">
@@ -222,8 +222,8 @@
       <if test="aicName != null">
         #{aicName,jdbcType=VARCHAR},
       </if>
-      <if test="regNo != null">
-        #{regNo,jdbcType=VARCHAR},
+      <if test="pregNo != null">
+        #{pregNo,jdbcType=VARCHAR},
       </if>
       <if test="actNo != null">
         #{actNo,jdbcType=VARCHAR},
@@ -279,8 +279,8 @@
       <if test="record.aicName != null">
         AIC_NAME = #{record.aicName,jdbcType=VARCHAR},
       </if>
-      <if test="record.regNo != null">
-        REG_NO = #{record.regNo,jdbcType=VARCHAR},
+      <if test="record.pregNo != null">
+        REG_NO = #{record.pregNo,jdbcType=VARCHAR},
       </if>
       <if test="record.actNo != null">
         ACT_NO = #{record.actNo,jdbcType=VARCHAR},
@@ -319,7 +319,7 @@
       AREA_CODE = #{record.areaCode,jdbcType=VARCHAR},
       AIC_CODE = #{record.aicCode,jdbcType=VARCHAR},
       AIC_NAME = #{record.aicName,jdbcType=VARCHAR},
-      REG_NO = #{record.regNo,jdbcType=VARCHAR},
+      REG_NO = #{record.pregNo,jdbcType=VARCHAR},
       ACT_NO = #{record.actNo,jdbcType=VARCHAR},
       ACT_BAL = #{record.actBal,jdbcType=DECIMAL},
       BANK_HOST_SN = #{record.bankHostSn,jdbcType=VARCHAR},
@@ -348,8 +348,8 @@
       <if test="aicName != null">
         AIC_NAME = #{aicName,jdbcType=VARCHAR},
       </if>
-      <if test="regNo != null">
-        REG_NO = #{regNo,jdbcType=VARCHAR},
+      <if test="pregNo != null">
+        REG_NO = #{pregNo,jdbcType=VARCHAR},
       </if>
       <if test="actNo != null">
         ACT_NO = #{actNo,jdbcType=VARCHAR},
@@ -385,7 +385,7 @@
     set AREA_CODE = #{areaCode,jdbcType=VARCHAR},
       AIC_CODE = #{aicCode,jdbcType=VARCHAR},
       AIC_NAME = #{aicName,jdbcType=VARCHAR},
-      REG_NO = #{regNo,jdbcType=VARCHAR},
+      REG_NO = #{pregNo,jdbcType=VARCHAR},
       ACT_NO = #{actNo,jdbcType=VARCHAR},
       ACT_BAL = #{actBal,jdbcType=DECIMAL},
       BANK_HOST_SN = #{bankHostSn,jdbcType=VARCHAR},

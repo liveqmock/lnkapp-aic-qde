@@ -25,7 +25,7 @@ public class AppActivator implements BundleActivator {
 
         ProcessorFactory factory = new ProcessorFactory();
         Dictionary<String, Object> properties = new Hashtable<String, Object>();
-        properties.put("APPID", "AIC-QDE");
+        properties.put("APPID", "AICQDE");
         context.registerService(ProcessorManagerService.class.getName(), factory, properties);
 
         logger.info(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + " - Starting the AIC-QDE app bundle...." );
