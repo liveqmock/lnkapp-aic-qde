@@ -11,7 +11,6 @@ import org.fbi.aicqde.helper.ProjectConfigManager;
 import org.fbi.linking.codec.dataformat.FixedLengthTextDataFormat;
 import org.fbi.linking.codec.dataformat.SeperatedTextDataFormat;
 import org.fbi.linking.processor.ProcessorException;
-import org.fbi.linking.processor.standprotocol10.Stdp10Processor;
 import org.fbi.linking.processor.standprotocol10.Stdp10ProcessorRequest;
 import org.fbi.linking.processor.standprotocol10.Stdp10ProcessorResponse;
 import org.slf4j.Logger;
@@ -26,7 +25,7 @@ import java.util.Map;
  * 1561021	增资划转登记交易-
  * zhanrui
  */
-public class T1021processor extends Stdp10Processor {
+public class T1021processor extends AbstractTxnProcessor {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
@@ -66,26 +65,26 @@ public class T1021processor extends Stdp10Processor {
         }
 
         //处理工商局返回报文--
-        if (!"00".equals(aictoa1021.getRntCode())) {
-            response.setHeader("rtnCode", TxnRtnCode.TXN_EXECUTE_FAILED.getCode());
-            return;
-        }
-        TOA1021 toa = new TOA1021();
-        toa.setEntName(aictoa1021.getEntName());
-
-        //processTxn(aictia1021, aictoa1021);
-
-        //组特色平台响应报文--
-        String starringRespMsg = null;
+        String starringRespMsg = "";
         try {
-            starringRespMsg = getRespMsgForStarring(toa);
+            String aicRntCode = aictoa1021.getRntCode();
+            if (!"00".equals(aicRntCode)) {
+                response.setHeader("rtnCode", TxnRtnCode.TXN_EXECUTE_FAILED.getCode());
+                starringRespMsg = getErrorRespMsgForStarring(aicRntCode);
+            } else {
+                TOA1021 toa = new TOA1021();
+                toa.setEntName(aictoa1021.getEntName());
+
+                //processTxn(aictia1021, aictoa1021);
+                starringRespMsg = getRespMsgForStarring(toa);
+                response.setHeader("rtnCode", "0000");
+            }
         } catch (Exception e) {
             logger.error("特色平台响应报文处理失败.", e);
             throw new RuntimeException(e);
         }
 
         response.setResponseBody(starringRespMsg.getBytes(response.getCharacterEncoding()));
-        response.setHeader("rtnCode", "0000");
     }
 
     //处理Starring请求报文-
