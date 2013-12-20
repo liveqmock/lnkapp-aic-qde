@@ -121,7 +121,7 @@ public class FixedLengthTextDataBindFactory extends DataBindAbstractFactory impl
                     //if (dataField.trim()) {
                     //    tokens.add(token.trim());
                     //} else {
-                        tokens.add(token);
+                    tokens.add(token);
                     //}
                     offset += length;
                 }
@@ -425,6 +425,7 @@ public class FixedLengthTextDataBindFactory extends DataBindAbstractFactory impl
         char padchar = datafield.padchar();
         String align = datafield.align();
         byte[] fieldByteVal = fieldStrVal.getBytes(charset);
+
         if (fieldByteVal.length < length) {
             int needpadsize = length - fieldByteVal.length;
             byte[] needpadbuf = new byte[needpadsize];
@@ -441,6 +442,13 @@ public class FixedLengthTextDataBindFactory extends DataBindAbstractFactory impl
             }
             fieldStrVal = new String(fieldtmpbuf, charset);
         }
+
+        if (fieldByteVal.length > length) {
+            byte[] tmp = new byte[length];
+            System.arraycopy(fieldByteVal, 0, tmp, 0, length);
+            fieldStrVal = new String(tmp, charset);
+        }
+
         return fieldStrVal;
     }
 

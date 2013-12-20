@@ -13,22 +13,22 @@ public class AICTIA1070 {
     @DataField(seq = 1, length = 4)
     private String txnCode;    //交易代码
 
-    @DataField(seq = 2, length = 4)
+    @DataField(seq = 2, length = 2)
     private String bankCode;    //银行代码
 
-    @DataField(seq = 3, length = 4)
+    @DataField(seq = 3, length = 7)
     private String tellerId;    //柜员号
 
-    @DataField(seq = 4, length = 4)
+    @DataField(seq = 4, length = 5)
     private String branchId;    //机构号
 
     @DataField(seq = 5, length = 4)
     private String areaCode;  //地区码
 
-    @DataField(seq = 6, length = 4)
+    @DataField(seq = 6, length = 2)
     private String aicCode; //工商局编号
 
-    @DataField(seq = 7, length = 4)
+    @DataField(seq = 7, length = 32)
     private String pregNo; //预登记号
 
     public String getTxnCode() {
