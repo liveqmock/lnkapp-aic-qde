@@ -42,10 +42,11 @@ public class T1010processor extends AbstractTxnProcessor {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public void service(Stdp10ProcessorRequest request, Stdp10ProcessorResponse response) throws ProcessorException, IOException {
+    public void doRequest(Stdp10ProcessorRequest request, Stdp10ProcessorResponse response) throws ProcessorException, IOException {
         TIA1010 tia;
         try {
             tia = getStarringTia(request.getRequestBody());
+            logger.info("特色业务平台请求报文TIA:" + tia.toString());
         } catch (Exception e) {
             logger.error("特色业务平台请求报文解析错误.", e);
             response.setHeader("rtnCode", TxnRtnCode.CBSMSG_UNMARSHAL_FAILED.getCode());

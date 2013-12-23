@@ -8,17 +8,17 @@ import org.osgi.framework.ServiceRegistration;
 /**
  * User: zhanrui
  * Date: 13-8-22
- * Time: ä¸Šåˆ7:44
+ * Time: ÉÏÎç7:44
  */
 public class ProcessorFactory implements ServiceFactory<ProcessorManagerServiceImpl> {
     @Override
     public ProcessorManagerServiceImpl getService(Bundle bundle, ServiceRegistration<ProcessorManagerServiceImpl> registration) {
-        System.out.println(bundle.getSymbolicName() + "å·²è·å–æœåŠ¡ã€‚ ");
+        System.out.println(bundle.getSymbolicName() + "ÒÑ»ñÈ¡·şÎñ¡£ ");
         return new ProcessorManagerServiceImpl();
     }
 
     @Override
     public void ungetService(Bundle bundle, ServiceRegistration<ProcessorManagerServiceImpl> registration, ProcessorManagerServiceImpl service) {
-        System.out.println(bundle.getSymbolicName() + "å·²é‡Šæ”¾æœåŠ¡ã€‚");
+        System.out.println(bundle.getSymbolicName() + "ÒÑÊÍ·Å·şÎñ¡£");
     }
 }
