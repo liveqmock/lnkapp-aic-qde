@@ -2,6 +2,8 @@ package org.fbi.aicqde.processor;
 
 import org.apache.commons.lang.StringUtils;
 import org.fbi.aicqde.domain.starring.T9999Response.TOA9999;
+import org.fbi.aicqde.helper.TpsSocketClient;
+import org.fbi.aicqde.helper.ProjectConfigManager;
 import org.fbi.aicqde.internal.AppActivator;
 import org.fbi.linking.codec.dataformat.SeperatedTextDataFormat;
 import org.fbi.linking.processor.ProcessorException;
@@ -72,5 +74,33 @@ public abstract class AbstractTxnProcessor extends Stdp10Processor {
             property = "未定义对应的错误信息(错误码:" + rtnCode + ")";
         }
         return property;
+    }
+
+    protected String processThirdPartyServer(String sendMsg) throws Exception {
+        String servIp = ProjectConfigManager.getInstance().getProperty("tps.server.ip");
+        int servPort = Integer.parseInt(ProjectConfigManager.getInstance().getProperty("tps.server.port"));
+        TpsSocketClient client = new TpsSocketClient(servIp, servPort);
+
+        String timeoutCfg = ProjectConfigManager.getInstance().getProperty("tps.server.timeout.txn." + getTpsTxnCode(sendMsg));
+        if (timeoutCfg != null) {
+            int timeout = Integer.parseInt(timeoutCfg);
+            client.setTimeout(timeout);
+        } else {
+            timeoutCfg = ProjectConfigManager.getInstance().getProperty("tps.server.timeout");
+            if (timeoutCfg != null) {
+                int timeout = Integer.parseInt(timeoutCfg);
+                client.setTimeout(timeout);
+            }
+        }
+
+        byte[] recvbuf = client.call(sendMsg.getBytes("GBK"));
+
+        String recvMsg = new String(recvbuf, "GBK");
+        return recvMsg;
+    }
+
+    //获取第三方请求交易的交易号
+    private String getTpsTxnCode(String sendMsg){
+        return sendMsg.substring(4,8);
     }
 }

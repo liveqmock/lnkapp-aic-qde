@@ -36,5 +36,5 @@ Import-Package: org.osgi.framework,
  org.fbi.linking.connector,
  org.fbi.linking.processor.standprotocol10,
  org.fbi.linking.processor
-Private-Package: lib,org.fbi.posprize.internal
+Private-Package: lib,org.fbi.aicqde.internal
 Tool: Bnd-1.50.0

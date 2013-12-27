@@ -7,19 +7,19 @@ import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 
 /**
- * å·¥å•†Eçº¿é€šæµ‹è¯• client
- * æ³¨ï¼šæœªä½œé€šè®¯ç²˜åŒ…å¤„ç†
+ * µÚÈı·½·şÎñÆ÷ ¹¤ÉÌEÏßÍ¨ client
+ * ×¢£ºÎ´×÷Í¨Ñ¶Õ³°ü´¦Àí
  * User: zhanrui
  * Date: 13-11-27
  */
-public class AicqdeClient {
+public class TpsSocketClient {
     private String ip;
     private int port;
+    private int timeout = 30000; //³¬Ê±Ê±¼ä£ºms  Á¬½Ó³¬Ê±Óë¶Á³¬Ê±Í³Ò»
 
-    public AicqdeClient(String ip, int port) {
+    public TpsSocketClient(String ip, int port) {
         this.ip = ip;
         this.port = port;
     }
@@ -30,12 +30,10 @@ public class AicqdeClient {
         InetAddress addr = InetAddress.getByName(ip);
         Socket socket = new Socket();
         try {
-            //socket = new Socket(ip, port);
-            socket.connect(new InetSocketAddress(addr, port), 10000);
+            socket.connect(new InetSocketAddress(addr, port), timeout);
             //socket.setSendBufferSize(100);
 
-            socket.setSoTimeout(10000);
-            //BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            socket.setSoTimeout(timeout);
 
             OutputStream os = socket.getOutputStream();
             os.write(sendbuf);
@@ -45,14 +43,14 @@ public class AicqdeClient {
             recvbuf = new byte[4];
             int readNum = is.read(recvbuf);
             if (readNum < 4) {
-                throw new RuntimeException("æŠ¥æ–‡é•¿åº¦é”™è¯¯...");
+                throw new RuntimeException("±¨ÎÄ³¤¶È´íÎó...");
             }
             int msgLen = Integer.parseInt(new String(recvbuf).trim());
             recvbuf = new byte[msgLen - 4];
 
-            readNum = is.read(recvbuf);
+            readNum = is.read(recvbuf);   //×èÈû¶Á
             if (readNum != msgLen - 4) {
-                throw new RuntimeException("æŠ¥æ–‡é•¿åº¦é”™è¯¯...");
+                throw new RuntimeException("±¨ÎÄ³¤¶È´íÎó...");
             }
         } finally {
             try {
@@ -66,17 +64,17 @@ public class AicqdeClient {
 
 
     public static void main(String... argv) throws UnsupportedEncodingException {
-        AicqdeClient mock = new AicqdeClient("127.0.0.1", 60001);
+        TpsSocketClient mock = new TpsSocketClient("127.0.0.1", 60001);
 
-        //1070ï¼šå…¥èµ„ç™»è®°é¢„äº¤æ˜“
+        //1070£ºÈë×ÊµÇ¼ÇÔ¤½»Ò×
         String msg = "" +
-                "1070" + //äº¤æ˜“ç 
-                "02" + //é“¶è¡Œä»£ç 	2	CHAR	ä¸­è¡Œä»£ç ç»Ÿä¸€ä½¿ç”¨01
-                "1111111" + //æŸœå‘˜å·	7	CHAR	å³è¡¥ç©ºæ ¼
-                "22222" +  //æœºæ„å·	5	CHAR	å³è¡¥ç©ºæ ¼
-                "3333" +   //åœ°åŒºç 	4	CHAR	å³è¡¥ç©ºæ ¼
-                "44" +  //å·¥å•†å±€ç¼–å·	2	CHAR
-                "12345678901234567890123456789012"; //é¢„ç™»è®°å·	32	CHAR	å³è¡¥ç©ºæ ¼
+                "1070" + //½»Ò×Âë
+                "02" + //ÒøĞĞ´úÂë	2	CHAR	ÖĞĞĞ´úÂëÍ³Ò»Ê¹ÓÃ01
+                "1111111" + //¹ñÔ±ºÅ	7	CHAR	ÓÒ²¹¿Õ¸ñ
+                "22222" +  //»ú¹¹ºÅ	5	CHAR	ÓÒ²¹¿Õ¸ñ
+                "3333" +   //µØÇøÂë	4	CHAR	ÓÒ²¹¿Õ¸ñ
+                "44" +  //¹¤ÉÌ¾Ö±àºÅ	2	CHAR
+                "12345678901234567890123456789012"; //Ô¤µÇ¼ÇºÅ	32	CHAR	ÓÒ²¹¿Õ¸ñ
 
         String strLen = null;
         strLen = "" + (msg.getBytes("GBK").length + 4);
@@ -90,12 +88,14 @@ public class AicqdeClient {
         byte[] recvbuf = new byte[0];
         try {
             recvbuf = mock.call((strLen + msg).getBytes("GBK"));
-        } catch (SocketTimeoutException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        System.out.printf("æœåŠ¡å™¨è¿”å›ï¼š%s\n", new String(recvbuf, "GBK"));
+        System.out.printf("·şÎñÆ÷·µ»Ø£º%s\n", new String(recvbuf, "GBK"));
+    }
+
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
     }
 }

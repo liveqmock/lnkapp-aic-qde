@@ -11,9 +11,7 @@ import org.fbi.aicqde.domain.starring.T1010Request.TIA1010;
 import org.fbi.aicqde.domain.starring.T1010Request.TIA1010Item;
 import org.fbi.aicqde.domain.starring.T1010Response.TOA1010;
 import org.fbi.aicqde.enums.TxnRtnCode;
-import org.fbi.aicqde.helper.AicqdeClient;
 import org.fbi.aicqde.helper.MybatisFactory;
-import org.fbi.aicqde.helper.ProjectConfigManager;
 import org.fbi.aicqde.repository.dao.AicQdeEntMapper;
 import org.fbi.aicqde.repository.dao.AicQdeInvesterMapper;
 import org.fbi.aicqde.repository.model.AicQdeEnt;
@@ -152,13 +150,7 @@ public class T1010processor extends AbstractTxnProcessor {
 
     //工商服务器通讯
     private AICTOA1010 sendAndRecvForAic(String sendMsg) throws Exception {
-        String servIp = ProjectConfigManager.getInstance().getProperty("aic.server.ip");
-        int servPort = Integer.parseInt(ProjectConfigManager.getInstance().getProperty("aic.server.port"));
-
-        AicqdeClient client = new AicqdeClient(servIp, servPort);
-        byte[] recvbuf = client.call(sendMsg.getBytes("GBK"));
-
-        String recvMsg = new String(recvbuf, "GBK");
+        String recvMsg = processThirdPartyServer(sendMsg);
         logger.info("工商返回：" + recvMsg);
 
         AICTOA1010 aictoa1010 = new AICTOA1010();
@@ -166,6 +158,7 @@ public class T1010processor extends AbstractTxnProcessor {
         aictoa1010 = (AICTOA1010) aicRespDataFormat.fromMessage(recvMsg.getBytes("GBK"), "AICTOA1010");
         return aictoa1010;
     }
+
 
     //处理工商返回报文
     private String getRespMsgForStarring(TOA1010 toa) throws Exception {

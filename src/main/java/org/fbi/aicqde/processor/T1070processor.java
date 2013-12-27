@@ -6,8 +6,6 @@ import org.fbi.aicqde.domain.aicqde.T1070Response.AICTOA1070;
 import org.fbi.aicqde.domain.starring.T1070Request.TIA1070;
 import org.fbi.aicqde.domain.starring.T1070Response.TOA1070;
 import org.fbi.aicqde.enums.TxnRtnCode;
-import org.fbi.aicqde.helper.AicqdeClient;
-import org.fbi.aicqde.helper.ProjectConfigManager;
 import org.fbi.linking.codec.dataformat.FixedLengthTextDataFormat;
 import org.fbi.linking.codec.dataformat.SeperatedTextDataFormat;
 import org.fbi.linking.processor.ProcessorException;
@@ -130,13 +128,8 @@ public class T1070processor extends AbstractTxnProcessor {
 
     //工商服务器通讯-
     private AICTOA1070 sendAndRecvForAic(String sendMsg) throws Exception {
-        String servIp = ProjectConfigManager.getInstance().getProperty("aic.server.ip");
-        int servPort = Integer.parseInt(ProjectConfigManager.getInstance().getProperty("aic.server.port"));
-
-        AicqdeClient client = new AicqdeClient(servIp, servPort);
-        byte[] recvbuf = client.call(sendMsg.getBytes("GBK"));
-        String recvMsg = new String(recvbuf, "GBK");
-        logger.info(" 工商返回：" + recvMsg);
+        String recvMsg = processThirdPartyServer(sendMsg);
+        logger.info("工商返回：" + recvMsg);
 
         AICTOA1070 aictoa1070 = new AICTOA1070();
         FixedLengthTextDataFormat aicRespDataFormat = new FixedLengthTextDataFormat(aictoa1070.getClass().getPackage().getName());

@@ -6,8 +6,6 @@ import org.fbi.aicqde.domain.aicqde.T1071Response.AICTOA1071;
 import org.fbi.aicqde.domain.starring.T1071Request.TIA1071;
 import org.fbi.aicqde.domain.starring.T1071Response.TOA1071;
 import org.fbi.aicqde.enums.TxnRtnCode;
-import org.fbi.aicqde.helper.AicqdeClient;
-import org.fbi.aicqde.helper.ProjectConfigManager;
 import org.fbi.linking.codec.dataformat.FixedLengthTextDataFormat;
 import org.fbi.linking.codec.dataformat.SeperatedTextDataFormat;
 import org.fbi.linking.processor.ProcessorException;
@@ -130,13 +128,7 @@ public class T1071processor extends AbstractTxnProcessor {
 
     //工商服务器通讯
     private AICTOA1071 sendAndRecvForAic(String sendMsg) throws Exception {
-        String servIp = ProjectConfigManager.getInstance().getProperty("aic.server.ip");
-        int servPort = Integer.parseInt(ProjectConfigManager.getInstance().getProperty("aic.server.port"));
-
-        AicqdeClient client = new AicqdeClient(servIp, servPort);
-        byte[] recvbuf = client.call(sendMsg.getBytes("GBK"));
-
-        String recvMsg = new String(recvbuf, "GBK");
+        String recvMsg = processThirdPartyServer(sendMsg);
         logger.info("工商返回：" + recvMsg);
 
         AICTOA1071 aictoa1071 = new AICTOA1071();
