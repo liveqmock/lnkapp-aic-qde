@@ -16,7 +16,8 @@ public class ProcessorManagerServiceImpl implements ProcessorManagerService {
     }
 
     public Processor getProcessor(String txnCode) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-        Class clazz = Class.forName("org.fbi.aicqde.processor.T" + txnCode + "processor");
+        String[] names = this.getClass().getPackage().getName().split("\\.");
+        Class clazz = Class.forName(names[0] + "." + names[1] + "." + names[2] + ".processor.T" + txnCode + "Processor");
         Processor processor = (Processor)clazz.newInstance();
 
         //TODO

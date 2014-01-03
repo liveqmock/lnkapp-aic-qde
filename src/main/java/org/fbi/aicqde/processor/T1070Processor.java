@@ -23,7 +23,7 @@ import java.util.Map;
  * 1561070入资登记预交易-
  * zhanrui
  */
-public class T1070processor extends AbstractTxnProcessor {
+public class T1070Processor extends AbstractTxnProcessor {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
